@@ -18,6 +18,15 @@ func GetAllClients(c echo.Context) error {
 	return c.JSON(http.StatusOK, cls)
 }
 
+// GetAllClientsGorm show all client in json
+func GetAllClientsGorm(c echo.Context) error {
+	cls, err := models.SeekClientGorm()
+	if err != nil {
+		panic(err)
+	}
+	return c.JSON(http.StatusOK, cls)
+}
+
 // CreateClient insert new client
 func CreateClient(c echo.Context) (err error) {
 

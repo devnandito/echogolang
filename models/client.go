@@ -5,10 +5,12 @@ import (
 	"time"
 
 	"github.com/devnandito/echogolang/lib"
+	"gorm.io/gorm"
 )
 
 // Client client access public
 type Client struct {
+	gorm.Model
 	ID int `json:"id"`
 	FirstName string `json:"firstname"`
 	LastName string `json:"lastname"`
@@ -53,6 +55,22 @@ func SeekClient() ([]Client, error) {
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
+	return cls, nil
+}
+
+// SeekClientGorm show all client
+func SeekClientGorm() ([]Client, error) {
+	cls := []Client{}
+	conn := lib.NewConfig()
+	db := conn.DsnStringGorm()
+	db.AutoMigrate()
+	rows:= db.Order("last_name asc, first_name asc").Find(&cls)
+
+	err := rows.Error
+	if err != nil {
+		panic(err)
+	}
+
 	return cls, nil
 }
 
