@@ -1,0 +1,9 @@
+{{define "title"}}
+  {{index . "Title"}}
+{{end}}
+
+{{define "body"}}
+  {{ range index . "clients"}}
+  <p>{{.ID}} - {{.FirstName}} {{.LastName}}</p>
+  {{ end}}
+{{end}}
