@@ -5,6 +5,7 @@ import (
 	"io"
 	"text/template"
 
+	"github.com/devnandito/echogolang/api"
 	"github.com/devnandito/echogolang/handlers"
 	"github.com/labstack/echo"
 )
@@ -27,20 +28,23 @@ func (t *TemplateRegistry) Render(w io.Writer, name string, data interface{}, c 
 func main() {
 	// Instanciar echo
 	e := echo.New()
-	e.GET("/", handlers.Home)
-	e.GET("/clients", handlers.GetAllClients)
-	e.GET("/clients/list", handlers.GetAllClientsGorm)
-	e.POST("/clients", handlers.CreateClient)
-	e.PUT("/clients/:ci", handlers.UpdateClient)
-	e.DELETE("/clients/:ci", handlers.DeleteClient)
-	e.GET("/clients/:ci", handlers.SearchClient)
-
+	e.GET("/clients", api.GetAllClients)
+	e.GET("/clients/list", api.GetAllClientsGorm)
+	e.POST("/clients", api.CreateClient)
+	e.PUT("/clients/:ci", api.UpdateClient)
+	e.DELETE("/clients/:ci", api.DeleteClient)
+	e.GET("/clients/:ci", api.SearchClient)
+	
 	templates := make(map[string]*template.Template)
 	templates["index.html"] = template.Must(template.ParseFiles("views/clients/index.html", "views/base.html"))
+	templates["home.html"] = template.Must(template.ParseFiles("views/home/index.html", "views/base.html"))
 	e.Renderer = &TemplateRegistry{
 		templates: templates,
 	}
-	e.GET("/clients/show", handlers.ShowClients)
+	e.Static("/static", "assets")
+	e.File("/favicon.png", "static/img/favicon.png")
+	e.GET("/", handlers.Home)
 	e.Static("/clients/static", "assets")
+	e.GET("/clients/show", handlers.ShowClients)
 	e.Logger.Fatal(e.Start(":9000"))
 }
