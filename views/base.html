@@ -77,7 +77,11 @@
         </span>
         <!-- logo normal-->
         <span class="logo-lg">
-          <img src="#" class="img-responsive" style="padding: 10px 0px" />
+          <img
+            src="static/img/favicon.png"
+            class="img-responsive"
+            style="padding: 10px 0px"
+          />
         </span>
       </a>
       <!--BARRA DE NAVEGACION-->
@@ -129,7 +133,7 @@
       <section class="sidebar">
         <ul class="sidebar-menu">
           <li class="active">
-            <a href="#">
+            <a href="/">
               <i class="fa fa-home"></i>
               <span>Home</span>
             </a>
@@ -181,7 +185,7 @@
           <!-- endif
             if request.user.profile.level.id == 1 or  request.user.profile.level.id == 2 -->
           <li>
-            <a href='{{index . "url"}}'>
+            <a href="/clients/show">
               <i class="fa fa-users"></i>
               <span>Clients</span>
             </a>

@@ -20,7 +20,7 @@ func GetAllClients(c echo.Context) error {
 
 // GetAllClientsGorm show all client in json
 func GetAllClientsGorm(c echo.Context) error {
-	cls, err := models.SeekClientGorm()
+	cls, err := models.SeekClient()
 	if err != nil {
 		panic(err)
 	}

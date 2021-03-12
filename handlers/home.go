@@ -14,6 +14,7 @@ func Home(c echo.Context) error {
 		"url": "clients/show",
 	})
 }
+
 // ShowClient list all client table
 // func ShowClient(c echo.Context) error {
 // 	cls, err := models.SeekClient()

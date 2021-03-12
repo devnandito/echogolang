@@ -7,7 +7,7 @@
     <h1>{{index . "Title"}}</h1>
     <ol class="breadcrumb">
       <li>
-        <a href="#"><i class="fa fa-dashboard"></i> Home</a>
+        <a href="/"><i class="fa fa-dashboard"></i> Home</a>
       </li>
       <li class="active">Show clients</li>
     </ol>
@@ -15,7 +15,6 @@
   <section class="content">
     <div class="box">
       <div class="box-header with-border">
-        <a href="/clients/create" class="btn btn-primary"> Add clients </a>
         <div class="box-tools pull-right">
           <button
             type="button"
@@ -38,28 +37,15 @@
         </div>
       </div>
       <div class="box-body">
-        <table class="table table-bordered table-striped dt-responsive tablas">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>FirstName</th>
-              <th>LastName</th>
-              <th>Ci</th>
-              <th>Birthday</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{ range index . "clients"}}
-            <tr>
-              <td>{{.ID}}</td>
-              <td>{{.FirstName}}</td>
-              <td>{{.LastName}}</td>
-              <td>{{.Ci }}</td>
-              <td>{{.Birthday }}</td>
-            </tr>
-            {{end}}
-          </tbody>
-        </table>
+        <div class="container">
+          <div class="row">
+            <h3>{{index . "msg"}}</h3>
+            <p>
+              {{$var1 := index . "client"}} {{$var1.ID}} - {{$var1.Ci}} -
+              {{$var1.FirstName}} - {{$var1.LastName}}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </section>

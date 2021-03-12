@@ -38,6 +38,10 @@ func main() {
 	templates := make(map[string]*template.Template)
 	templates["index.html"] = template.Must(template.ParseFiles("views/clients/index.html", "views/base.html"))
 	templates["home.html"] = template.Must(template.ParseFiles("views/home/index.html", "views/base.html"))
+	templates["search.html"] = template.Must(template.ParseFiles("views/clients/search.html", "views/base.html"))
+	templates["result.html"] = template.Must(template.ParseFiles("views/clients/result.html", "views/base.html"))
+	templates["create.html"] = template.Must(template.ParseFiles("views/clients/create.html", "views/base.html"))
+	templates["msg.html"] = template.Must(template.ParseFiles("views/clients/msg.html", "views/base.html"))
 	e.Renderer = &TemplateRegistry{
 		templates: templates,
 	}
@@ -46,5 +50,9 @@ func main() {
 	e.GET("/", handlers.Home)
 	e.Static("/clients/static", "assets")
 	e.GET("/clients/show", handlers.ShowClients)
+	e.GET("/clients/search", handlers.SearchForm)
+	e.POST("/clients/search", handlers.ResultSearch)
+	e.GET("/clients/create", handlers.ShowFormClient)
+	e.POST("/clients/create", handlers.SaveFormClient)
 	e.Logger.Fatal(e.Start(":9000"))
 }

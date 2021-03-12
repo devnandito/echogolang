@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/devnandito/echogolang/lib"
@@ -58,20 +59,70 @@ func SeekClient() ([]Client, error) {
 	return cls, nil
 }
 
-// SeekClientGorm show all client
-func SeekClientGorm() ([]Client, error) {
-	cls := []Client{}
+// GetClientGorm show all client
+func GetClientGorm(ci, firstname, lastname string) ([]Client, error) {
+	clients := []Client{}
 	conn := lib.NewConfig()
 	db := conn.DsnStringGorm()
-	db.AutoMigrate()
-	rows:= db.Order("last_name asc, first_name asc").Find(&cls)
+	name := strings.ToUpper(firstname)
+	last := strings.ToUpper(lastname)
+	var count int64
+	// db.AutoMigrate()
+	if name == "" && last == "" {
+		res:= db.Order("ci asc").Where("ci = ?", ci).Find(&clients).Count(&count)
+		err := res.Error
+		if err != nil {
+			panic(err)
+		}
+	} else if ci == "" && last == "" {
+		res:= db.Order("first_name asc").Where("first_name LIKE ? ", name).Find(&clients).Count(&count)
+		err := res.Error
+		if err != nil {
+			panic(err)
+		}
+	} else if ci == "" && name == "" {
+		res := db.Order("last_name asc").Where("last_name LIKE ?", last+"%").Find(&clients).Count(&count)
+		err := res.Error
+		if err != nil {
+			panic(err)
+		}
+	} else if ci == "" {
+		res := db.Order("last_name asc, first_name asc").Where("last_name LIKE ? OR first_name LIKE ?", last+"%", name+"%").Find(&clients).Count(&count)
+		err := res.Error
+		if err != nil {
+			panic(err)
+		}
+	} else if name == "" {
+		res := db.Order("last_name asc, ci asc").Where("last_name LIKE ? OR ci = ?", last+"%", ci).Find(&clients).Count(&count)
+		err := res.Error
+		if err != nil {
+			panic(err)
+		}
+	} else if last == "" {
+		res := db.Order("first_name asc, ci asc").Where("first_name LIKE ? OR ci = ?", name+"%", ci).Find(&clients).Count(&count)
+		err := res.Error
+		if err != nil {
+			panic(err)
+		}
+	} 
+	return clients, nil
+}
 
-	err := rows.Error
+//CreateClientGorm insert new client
+func CreateClientGorm(ci, firstname, lastname string) (*Client, error) {
+	conn := lib.NewConfig()
+	db := conn.DsnStringGorm()
+	data := &Client{
+		FirstName: firstname,
+		LastName: lastname,
+		Ci: ci,
+	}
+	res := db.Create(&data)
+	err := res.Error
 	if err != nil {
 		panic(err)
 	}
-
-	return cls, nil
+	return data, nil
 }
 
 // CreateClient insert new client
