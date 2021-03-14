@@ -46,6 +46,7 @@
               <th>LastName</th>
               <th>Ci</th>
               <th>Birthday</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -56,6 +57,10 @@
               <td>{{.LastName}}</td>
               <td>{{.Ci }}</td>
               <td>{{.Birthday }}</td>
+              <td>
+                <a href="/clients/edit/{{.ID}}">Edit</a> -
+                <a href="/clients/delete/{{.ID}}">Delete</a>
+              </td>
             </tr>
             {{end}}
           </tbody>

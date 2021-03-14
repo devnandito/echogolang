@@ -35,7 +35,7 @@ func SeekClient() ([]Client, error) {
 
 	conn := lib.NewConfig()
 	db := conn.DsnString()
-	rows, err := db.Query("SELECT id, first_name, last_name, ci, birthday FROM clients LIMIT 10")
+	rows, err := db.Query("SELECT id, first_name, last_name, ci, birthday FROM clients LIMIT 20")
 
 	if err != nil {
 		panic(err)
@@ -69,60 +69,111 @@ func GetClientGorm(ci, firstname, lastname string) ([]Client, error) {
 	var count int64
 	// db.AutoMigrate()
 	if name == "" && last == "" {
-		res:= db.Order("ci asc").Where("ci = ?", ci).Find(&clients).Count(&count)
-		err := res.Error
+		response := db.Order("ci asc").Where("ci = ?", ci).Find(&clients).Count(&count)
+		err := response.Error
 		if err != nil {
 			panic(err)
 		}
 	} else if ci == "" && last == "" {
-		res:= db.Order("first_name asc").Where("first_name LIKE ? ", name).Find(&clients).Count(&count)
-		err := res.Error
+		response := db.Order("first_name asc").Where("first_name LIKE ? ", name).Find(&clients).Count(&count)
+		err := response.Error
 		if err != nil {
 			panic(err)
 		}
 	} else if ci == "" && name == "" {
-		res := db.Order("last_name asc").Where("last_name LIKE ?", last+"%").Find(&clients).Count(&count)
-		err := res.Error
+		response := db.Order("last_name asc").Where("last_name LIKE ?", last+"%").Find(&clients).Count(&count)
+		err := response.Error
 		if err != nil {
 			panic(err)
 		}
 	} else if ci == "" {
-		res := db.Order("last_name asc, first_name asc").Where("last_name LIKE ? OR first_name LIKE ?", last+"%", name+"%").Find(&clients).Count(&count)
-		err := res.Error
+		response := db.Order("last_name asc, first_name asc").Where("last_name LIKE ? OR first_name LIKE ?", last+"%", name+"%").Find(&clients).Count(&count)
+		err := response.Error
 		if err != nil {
 			panic(err)
 		}
 	} else if name == "" {
-		res := db.Order("last_name asc, ci asc").Where("last_name LIKE ? OR ci = ?", last+"%", ci).Find(&clients).Count(&count)
-		err := res.Error
+		response := db.Order("last_name asc, ci asc").Where("last_name LIKE ? OR ci = ?", last+"%", ci).Find(&clients).Count(&count)
+		err := response.Error
 		if err != nil {
 			panic(err)
 		}
 	} else if last == "" {
-		res := db.Order("first_name asc, ci asc").Where("first_name LIKE ? OR ci = ?", name+"%", ci).Find(&clients).Count(&count)
-		err := res.Error
+		response := db.Order("first_name asc, ci asc").Where("first_name LIKE ? OR ci = ?", name+"%", ci).Find(&clients).Count(&count)
+		err := response.Error
 		if err != nil {
 			panic(err)
 		}
-	} 
+	}
 	return clients, nil
 }
 
+// EditClientGorm edit client
+// func EditClientGorm(id int64) ([]Client, error) {
+// 	client := []Client{}
+// 	conn := lib.NewConfig()
+// 	db := conn.DsnStringGorm()
+// 	response := db.Find(&client, id)
+// 	err := response.Error
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	return client, nil
+// }
+
 //CreateClientGorm insert new client
-func CreateClientGorm(ci, firstname, lastname string) (*Client, error) {
+func (c Client) CreateClientGorm(cls *Client) (Client, error) {
 	conn := lib.NewConfig()
 	db := conn.DsnStringGorm()
-	data := &Client{
-		FirstName: firstname,
-		LastName: lastname,
-		Ci: ci,
+	response := db.Create(&cls)
+	data := Client{
+		FirstName: cls.FirstName,
+		LastName: cls.LastName,
+		Ci: cls.Ci,
 	}
-	res := db.Create(&data)
-	err := res.Error
+	return data, response.Error
+}
+
+// EditClientGorm edit client
+func (c Client) EditClientGorm(id int64) (Client, error) {
+	conn := lib.NewConfig()
+	db := conn.DsnStringGorm()
+	response := db.Find(&c, id)
+	return c, response.Error
+}
+
+// SaveEditClientGorm saved client edit
+func (c Client) SaveEditClientGorm(id int, cls *Client) (Client, error) {
+	conn := lib.NewConfig()
+	db := conn.DsnStringGorm()
+	response := db.Model(&c).Where("id = ?", id).Updates(Client{FirstName: cls.FirstName, LastName: cls.LastName, Ci: cls.Ci})
+	return c, response.Error
+}
+
+// DeleteClientGorm delete client
+func (c Client) DeleteClientGorm(id int) error {
+	conn := lib.NewConfig()
+	db := conn.DsnStringGorm()
+	response := db.Delete(&c, id)
+	return response.Error
+}
+
+// ShowClientGorm show client
+func (c Client) ShowClientGorm() ([]Client, error) {
+	conn := lib.NewConfig()
+	db := conn.DsnStringGorm()
+	rows, err := db.Order("id asc").Model(&c).Rows()
 	if err != nil {
 		panic(err)
 	}
-	return data, nil
+	defer rows.Close()
+	var response []Client
+	for rows.Next() {
+		var item Client
+		db.ScanRows(rows, &item)
+		response = append(response, item)
+	}
+	return response, err
 }
 
 // CreateClient insert new client
