@@ -28,5 +28,5 @@ func main() {
 	e.GET("/api/modules", api.ApiShowModule)
 	// EndPoint operations
 	e.GET("/api/operations", api.ApiShowOperation)
-	e.Logger.Fatal(e.Start(":9000"))
+	e.Logger.Fatal(e.Start(":80"))
 }
