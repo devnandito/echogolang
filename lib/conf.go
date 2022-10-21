@@ -23,16 +23,17 @@ type Config struct {
 // GetEnv load env
 func GetEnv() (host, name, user, pwd, port string) {
 	// err := godotenv.Load("lib/.env")
-	err := godotenv.Load(".env")
-	if err != nil {
-	 	log.Fatal("Error loading .env file")
-	}
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	//}
 
 	dbHost := os.Getenv("DB_HOST")
 	dbName := os.Getenv("DB_NAME")
 	dbUser := os.Getenv("DB_USER")
 	dbPwd := os.Getenv("DB_PWD")
 	dbPort := os.Getenv("DB_PORT")
+	
 	return dbHost, dbName, dbUser, dbPwd, dbPort
  }
 
