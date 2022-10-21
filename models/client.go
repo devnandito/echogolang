@@ -118,6 +118,7 @@ func (c Client) ApiGetClientGorm(id string) ([]Client, error) {
 func (c Client) ApiSearchClientGorm(cls *Client) ([]Client, error) {
 	conn := lib.NewConfig()
 	db := conn.DsnStringGorm()
+	db.AutoMigrate(&Client{})
 	list := strings.Fields(cls.FirstName)
 	var name string
 	var lastname string
