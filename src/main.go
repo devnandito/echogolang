@@ -10,7 +10,7 @@ func main() {
 	// Instanciar echo
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-  AllowOrigins: []string{"http://localhost:3000", "http://localhost:9000"},
+		AllowOrigins: []string{"http://localhost:3000", "http://localhost:9000", "http://echogolang.onrender.com:8080"},
   AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 }))
 	// EndPoint clients
